@@ -3,20 +3,50 @@ import * as THREE from "three";
 // Check if THREE.js classes are accessible
 // console.log(THREE);
 
-// Step 1 - Create a Scene
+// Create a Scene
 const scene = new THREE.Scene();
 
-// Step 2 - Create a Geometry
+// Create Geometry
 const geometry = new THREE.BoxGeometry(1, 1, 1);
 
-// Step 3 - Create a Material
-const material = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+// Create Materials
+const materialRed = new THREE.MeshBasicMaterial({ color: 0xff0000 });
+const materialGreen = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+const materialBlue = new THREE.MeshBasicMaterial({ color: 0x0000ff });
 
-// Step 4 - Create a Mesh using the Geometry and Material
-const mesh = new THREE.Mesh(geometry, material);
+/** Create Meshes using the Geometry and Materials
+ * Optional - If a scene has more than one meshe, a Group can be created
+ * And the meshes can be added to one Group.
+ * This makes transformation of the whole group a lot easier
+ */
 
-// Step 5 - Add the Mesh to the Scene
-scene.add(mesh);
+const group = new THREE.Group();
+
+const mesh1 = new THREE.Mesh(geometry, materialRed);
+const mesh2 = new THREE.Mesh(geometry, materialGreen);
+const mesh3 = new THREE.Mesh(geometry, materialBlue);
+
+mesh1.position.x = -2;
+mesh2.position.x = 0;
+mesh3.position.x = 2;
+
+group.scale.y = 2;
+
+group.add(mesh1);
+group.add(mesh2);
+group.add(mesh3);
+
+// Optional - Change position, scale and Rotation of the Mesh
+// mesh.position.x = 1;
+
+// mesh.scale.x = 1;
+// mesh.scale.y = 2;
+
+// mesh.rotation.reorder("YXZ");
+// mesh.rotation.x = Math.PI * 0.6;
+
+// Add the Mesh to the Scene
+scene.add(group);
 
 // Sizes
 const sizes = {
@@ -24,24 +54,32 @@ const sizes = {
 	height: 600,
 };
 
-// Step 6 - Create a Camera
+// Create a Camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height);
 
-// Step 7 - Setup Camera positon in 3D space and add it to the Scene
+// Setup Camera positon in 3D space
 camera.position.z = 3;
-camera.position.x = 1;
+
+// Optional - Make the Camera look at the subject
+// camera.lookAt(mesh.position);
+
+// Add Camera to the Scene
 scene.add(camera);
 
-// Step 8 - Fetch the HTML Canvas element where the Scene is to be rendered
+// Axes Helper
+const axesHelper = new THREE.AxesHelper(2);
+scene.add(axesHelper);
+
+// Fetch the HTML Canvas element where the Scene is to be rendered
 const canvas = document.querySelector(".canvas");
 
-// Step 9 - Add a Renderer to Render the Scene
+// Add a Renderer to Render the Scene
 const renderer = new THREE.WebGLRenderer({
 	canvas: canvas,
 });
 
-// Step 10 - Set the size of the Renderer (it also resizes the canvas element)
+// Set the size of the Renderer (it also resizes the canvas element)
 renderer.setSize(sizes.width, sizes.height);
 
-// Step 11 - Render the Scene
+// Render the Scene
 renderer.render(scene, camera);
